@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Valentine's Day</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: pink;
+      text-align: center;
+      padding-top: 50px;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    h1 {
+      color: deeppink;
+      margin-bottom: 20px;
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: center;
+      gap: 40px; /* space between Yes and No */
+      margin-bottom: 20px;
+    }
+
+    #yesBtn {
+      background-color: green;
+      color: white;
+      font-size: 28px; /* bigger Yes button */
+      padding: 15px 30px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    #noBtn {
+      background-color: red;
+      color: white;
+      font-size: 18px; /* smaller No button */
+      padding: 8px 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    #reactionGif {
+      max-width: 300px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+      opacity: 0;
+      transition: opacity 0.5s ease;
+      display: block;
+      margin: 0 auto;
+    }
+
+    .confetti {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background-color: gold;
+      animation: fall 3s linear infinite;
+    }
+
+    @keyframes fall {
+      0% { transform: translateY(-100px); opacity: 1; }
+      100% { transform: translateY(100vh); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+  <h1>Will you be my Valentine? ❤️❤️</h1>
+  
+  <div class="buttons">
+    <button id="yesBtn">Yes</button>
+    <button id="noBtn">No</button>
+  </div>
+
+  <img id="reactionGif" src="" alt="" />
+
+  <script>
+    const yesBtn = document.getElementById('yesBtn');
+    const noBtn = document.getElementById('noBtn');
+    const reactionGif = document.getElementById('reactionGif');
+    const body = document.body;
+
+    let yesSize = 28; // starting size for Yes
+    let noSize = 18;  // starting size for No
+    let noClickCount = 0;
+
+    const gifs = [
+      "gif1.gif",
+      "gif2.gif",
+      "gif3.gif",
+      "gif4.gif",
+      "gif5.gif"
+    ];
+
+    noBtn.addEventListener('click', () => {
+      noClickCount++;
+
+      // Yes grows
+      yesSize += 10;
+      yesBtn.style.fontSize = yesSize + "px";
+      yesBtn.style.padding = (yesSize / 2) + "px " + yesSize + "px";
+
+      // No shrinks
+      if (noSize > 10) {
+        noSize -= 2;
+        noBtn.style.fontSize = noSize + "px";
+        noBtn.style.padding = (noSize / 2) + "px " + noSize + "px";
+      }
+
+      // Change No button text sequence
+      if (noClickCount === 2) {
+        noBtn.textContent = "Are you sure?";
+      } else if (noClickCount === 3) {
+        noBtn.textContent = "Please :(";
+      } else if (noClickCount === 4) {
+        noBtn.textContent = "Why? :'(";
+      } else if (noClickCount === 5) {
+        noBtn.textContent = "OK :(((((";
+      }
+
+      // Show different GIF each time
+      if (noClickCount <= gifs.length) {
+        reactionGif.src = gifs[noClickCount - 1];
+        reactionGif.style.opacity = 1;
+      }
+    });
+
+    // Dodging effect only after 5 clicks
+    noBtn.addEventListener('mouseover', () => {
+      if (noClickCount >= 5) {
+        const maxX = window.innerWidth - noBtn.offsetWidth;
+        const maxY = window.innerHeight - noBtn.offsetHeight;
+
+        const randomX = Math.floor(Math.random() * maxX);
+        const randomY = Math.floor(Math.random() * maxY);
+
+        noBtn.style.position = "absolute";
+        noBtn.style.left = randomX + "px";
+        noBtn.style.top = randomY + "px";
+      }
+    });
+
+    yesBtn.addEventListener('click', () => {
+      body.innerHTML = `
+        <div class="celebration">
+          <h1>Knew you would say yes! 🎉</h1>
+          <img src="celebration.gif" alt="Celebration" style="max-width:400px; border-radius:12px;">
+        </div>
+      `;
+
+      // Add falling confetti
+      for (let i = 0; i < 50; i++) {
+        const confetti = document.createElement("div");
+        confetti.className = "confetti";
+        confetti.style.left = Math.random() * window.innerWidth + "px";
+        confetti.style.backgroundColor = ["gold", "deeppink", "white"][Math.floor(Math.random()*3)];
+        confetti.style.animationDuration = (2 + Math.random() * 3) + "s";
+        body.appendChild(confetti);
+      }
+    });
+  </script>
+</body>
+</html>
